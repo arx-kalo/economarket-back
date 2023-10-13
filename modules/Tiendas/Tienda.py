@@ -96,28 +96,31 @@ class Tienda:
                 "disponibilidad":[]
             }
         for t in self.__tiendas:
-            if product[f"Link {t}"] != None and "https" in product[f"Link {t}"]:
-                tienda = self.__objects[t]
-                                                            
-                data = tienda._get_scrap_product(product[f"Link {t}"])
-                if t == "Jumbo":
-                    temp[f"{t}"] = data
-                    temp[f"{t}"]["url"] = product[f"Link {t}"]
-                    
-                    if data.__len__() > 0:
-                        temp["disponibilidad"].append(t)
-                else:
-                    if "offers" in  data:
-                        temp[f"{t}"] = {
-                            "price": data["offers"]["lowPrice"],
-                            "img": data["image"],
-                            "url": product[f"Link {t}"]
-                        }
-                        temp["disponibilidad"].append(t)
+            
+            try: 
+                if product[f"Link {t}"] != None and "https" in product[f"Link {t}"]:
+                    tienda = self.__objects[t]
+                                                                
+                    data = tienda._get_scrap_product(product[f"Link {t}"])
+                    if t == "Jumbo":
+                        temp[f"{t}"] = data
+                        temp[f"{t}"]["url"] = product[f"Link {t}"]
+                        
+                        if data.__len__() > 0:
+                            temp["disponibilidad"].append(t)
                     else:
-                        temp[f"{t}"] ={}
-                
-            else:
+                        if "offers" in  data:
+                            temp[f"{t}"] = {
+                                "price": data["offers"]["lowPrice"],
+                                "img": data["image"],
+                                "url": product[f"Link {t}"]
+                            }
+                            temp["disponibilidad"].append(t) 
+                        else:
+                            temp[f"{t}"] ={}
+                else:
+                    temp[f"{t}"] = {}
+            except:
                 temp[f"{t}"] = {}
         return temp
         
